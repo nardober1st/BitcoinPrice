@@ -1,11 +1,84 @@
 package com.bernardooechsler.bitcoinprice
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        supportActionBar?.hide()
+
+        val btnDone = findViewById<Button>(R.id.buttom_login)
+
+        btnDone.setOnClickListener {
+
+            val edtname = findViewById<EditText>(R.id.edt_nome)
+            val edtpassword = findViewById<EditText>(R.id.edt_password)
+
+            val name = edtname.text.toString()
+            val password = edtpassword.text.toString()
+
+            when {
+
+                name.isEmpty() -> {
+
+                    mensage(it, "Coloque seu nome aqui!")
+
+                }
+
+                password.isEmpty() -> {
+
+                    mensage(it, "Preencha a senha!")
+
+                }
+
+                password.length <= 5 -> {
+
+                    mensage(it, "A senha precisa ter no mínimo 6 caracteres!")
+
+                }
+
+                else -> {
+
+                    //  startHomeActivity(name)
+
+                }
+
+            }
+        }
+
+
     }
 }
+
+private fun mensage(view: View, mensage: String) {
+
+    val snackbar = Snackbar.make(view, mensage, Snackbar.LENGTH_SHORT)
+    snackbar.setBackgroundTint(Color.parseColor("#FF6347"))
+    snackbar.setTextColor(Color.parseColor("#FFFFFFFF"))
+    snackbar.show()
+}
+
+
+/*private fun startHomeActivity(name: String) {
+
+    val intent = Intent(this, Home::class.java)
+    intent.putExtra("name", name)
+    startActivity(intent)
+
+
+}*/
+
+
+
+
+
+
