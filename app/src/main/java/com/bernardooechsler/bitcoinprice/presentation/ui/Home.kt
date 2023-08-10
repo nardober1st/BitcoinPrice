@@ -201,6 +201,13 @@ class Home : AppCompatActivity() {
 
         }
 
+        binding.tvBack.setOnClickListener {
+
+            startMainActivityActivity()
+
+        }
+
+
     }
 
     private fun formatDate(timestamp: Int): String {
@@ -245,6 +252,10 @@ class Home : AppCompatActivity() {
     private fun startConversionActivity() {
 
         val intent = Intent(this, ConversationScreen::class.java)
+        startActivity(intent)
+    }  private fun startMainActivityActivity() {
+
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
 }
