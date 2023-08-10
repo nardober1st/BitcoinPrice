@@ -1,11 +1,13 @@
-package com.bernardooechsler.bitcoinprice
+package com.bernardooechsler.bitcoinprice.presentation
 
+import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
+import com.bernardooechsler.bitcoinprice.R
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
@@ -25,6 +27,8 @@ class MainActivity : AppCompatActivity() {
 
             val name = edtname.text.toString()
             val password = edtpassword.text.toString()
+
+            startHomeActivity(name)
 
             when {
 
@@ -57,28 +61,21 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+    private fun mensage(view: View, mensage: String) {
+
+        val snackbar = Snackbar.make(view, mensage, Snackbar.LENGTH_SHORT)
+        snackbar.setBackgroundTint(Color.parseColor("#FF6347"))
+        snackbar.setTextColor(Color.parseColor("#FFFFFFFF"))
+        snackbar.show()
+    }
+
+
+    private fun startHomeActivity(name: String) {
+
+        val intent = Intent(this, Home::class.java)
+        intent.putExtra("name", name)
+        startActivity(intent)
+
+    }
 }
-
-private fun mensage(view: View, mensage: String) {
-
-    val snackbar = Snackbar.make(view, mensage, Snackbar.LENGTH_SHORT)
-    snackbar.setBackgroundTint(Color.parseColor("#FF6347"))
-    snackbar.setTextColor(Color.parseColor("#FFFFFFFF"))
-    snackbar.show()
-}
-
-
-/*private fun startHomeActivity(name: String) {
-
-    val intent = Intent(this, Home::class.java)
-    intent.putExtra("name", name)
-    startActivity(intent)
-
-
-}*/
-
-
-
-
-
-
