@@ -29,17 +29,17 @@ class BitcoinRepositoryImpl(
                 if (response.isSuccessful) {
                     val bitcoin = response.body()
                     bitcoin?.let {
-                        insertBitcoinWithPrices(bitcoin)
+                        insertBitcoin(bitcoin)
                     }
                     return bitcoin
                 } else {
                     // Handle API call error if needed
-                    Log.e("TAGY", "API call failed with code: ${response.code()}")
+//                    Log.e("TAGY", "API call failed with code: ${response.code()}")
                 }
             }
         } catch (e: Exception) {
             // Handle other exceptions if needed
-            Log.e("TAGY", "Exception: ${e.message}")
+//            Log.e("TAGY", "Exception: ${e.message}")
         }
         return null
     }
@@ -58,21 +58,21 @@ class BitcoinRepositoryImpl(
                 return bitcoin
             } else {
                 // Handle API call error if needed
-                Log.e("TAGY", "API call failed with code: ${response.code()}")
+//                Log.e("TAGY", "API call failed with code: ${response.code()}")
             }
         } catch (e: Exception) {
             // Handle other exceptions if needed
-            Log.e("TAGY", "Exception: ${e.message}")
+//            Log.e("TAGY", "Exception: ${e.message}")
         }
         return null
     }
 
-    private suspend fun insertBitcoinWithPrices(bitcoin: Bitcoin) {
-        bitcoinDao.insertBitcoin(bitcoin)
-        bitcoin.values.forEach { dataPrices ->
-            dataPriceDao.insertDataPrice(dataPrices)
-        }
-    }
+//    private suspend fun insertBitcoinWithPrices(bitcoin: Bitcoin) {
+//        bitcoinDao.insertBitcoin(bitcoin)
+//        bitcoin.values.forEach { dataPrices ->
+//            dataPriceDao.insertDataPrice(dataPrices)
+//        }
+//    }
 
     override suspend fun getBitcoinInfo(): BitcoinInfo? {
         try {
@@ -87,17 +87,17 @@ class BitcoinRepositoryImpl(
                 if (response.isSuccessful) {
                     val bitcoinInfo = response.body()
                     if (bitcoinInfo != null) {
-                        bitcoinInfoDao.insertBitcoinInfo(bitcoinInfo)
+                        insertBitcoinInfo(bitcoinInfo)
                     }
                     return bitcoinInfo
                 } else {
                     // Handle API call error if needed
-                    Log.e("TAGY", "API call failed with code: ${response.code()}")
+//                    Log.e("TAGY", "API call failed with code: ${response.code()}")
                 }
             }
         } catch (e: Exception) {
             // Handle other exceptions if needed
-            Log.e("TAGY", "Exception: ${e.message}")
+//            Log.e("TAGY", "Exception: ${e.message}")
         }
         return null
     }
@@ -120,5 +120,16 @@ class BitcoinRepositoryImpl(
             Log.e("TAGY", "Exception: ${e.message}")
         }
         return null
+    }
+
+    override suspend fun insertBitcoin(bitcoin: Bitcoin) {
+        bitcoinDao.insertBitcoin(bitcoin)
+        bitcoin.values.forEach { dataPrices ->
+            dataPriceDao.insertDataPrice(dataPrices)
+        }
+    }
+
+    override suspend fun insertBitcoinInfo(bitcoinInfo: BitcoinInfo) {
+        bitcoinInfoDao.insertBitcoinInfo(bitcoinInfo)
     }
 }
