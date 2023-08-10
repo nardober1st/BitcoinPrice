@@ -12,6 +12,10 @@ import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        const val USER_NAME: String = "user_name"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,19 +37,16 @@ class MainActivity : AppCompatActivity() {
             when {
 
                 name.isEmpty() -> {
-
                     mensage(it, "Coloque seu nome aqui!")
 
                 }
 
                 password.isEmpty() -> {
-
                     mensage(it, "Preencha a senha!")
 
                 }
 
                 password.length <= 5 -> {
-
                     mensage(it, "A senha precisa ter no mínimo 6 caracteres!")
 
                 }
@@ -53,13 +54,9 @@ class MainActivity : AppCompatActivity() {
                 else -> {
 
                     //  startHomeActivity(name)
-
                 }
-
             }
         }
-
-
     }
 
     private fun mensage(view: View, mensage: String) {
@@ -74,8 +71,7 @@ class MainActivity : AppCompatActivity() {
     private fun startHomeActivity(name: String) {
 
         val intent = Intent(this, Home::class.java)
-        intent.putExtra("name", name)
+        intent.putExtra(USER_NAME, name)
         startActivity(intent)
-
     }
 }

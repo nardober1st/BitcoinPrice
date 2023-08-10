@@ -1,6 +1,7 @@
 package com.bernardooechsler.bitcoinprice.presentation.ui
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bernardooechsler.bitcoinprice.R
+import com.bernardooechsler.bitcoinprice.databinding.ActivityHomeBinding
 import com.bernardooechsler.bitcoinprice.presentation.BitcoinViewModel
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
@@ -26,40 +28,30 @@ import java.util.Date
 import java.util.Locale
 
 class Home : AppCompatActivity() {
+
     // Lazy initialization of the ViewModel
     private val viewModel: BitcoinViewModel by lazy {
         BitcoinViewModel.create(applicationContext)
     }
-
-    private lateinit var lineChart: LineChart
-    private lateinit var bitcoinDesc: TextView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var btcName: TextView
-    private lateinit var btcSymbol: TextView
-    private lateinit var btcPrice: TextView
-    private lateinit var aboutChart: TextView
-    private lateinit var last29: TextView
+    private lateinit var binding: ActivityHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        bitcoinDesc = findViewById(R.id.btcDesc)
-        lineChart = findViewById(R.id.lineChart)
-        progressBar = findViewById(R.id.progressBar)
-        btcName = findViewById(R.id.btcName)
-        btcSymbol = findViewById(R.id.btcSymbol)
-        btcPrice = findViewById(R.id.btcPrice)
-        aboutChart = findViewById(R.id.aboutChart)
+        val home = intent.getStringExtra(MainActivity.USER_NAME)
+        binding.tvName.text = "Ola, $home!"
 
-        // Hide the LineChart and show the ProgressBar initially
-        lineChart.visibility = View.INVISIBLE
-        progressBar.visibility = View.VISIBLE
-        bitcoinDesc.visibility = View.INVISIBLE
-        btcName.visibility = View.INVISIBLE
-        btcSymbol.visibility = View.INVISIBLE
-        btcPrice.visibility = View.INVISIBLE
-        aboutChart.visibility = View.INVISIBLE
+        binding.apply {
+            lineChart.visibility = View.INVISIBLE
+            progressBar.visibility = View.VISIBLE
+            btcDesc.visibility = View.INVISIBLE
+            btcName.visibility = View.INVISIBLE
+            btcSymbol.visibility = View.INVISIBLE
+            btcPrice.visibility = View.INVISIBLE
+            aboutChart.visibility = View.INVISIBLE
+        }
 
         // Fetch entire Bitcoin data
         viewModel.getBitcoin()
@@ -87,26 +79,29 @@ class Home : AppCompatActivity() {
 
             displayLineChart(prices)
 
-            // Hide the ProgressBar and show the LineChart when data is available
-            progressBar.visibility = View.GONE
-            lineChart.visibility = View.VISIBLE
-            bitcoinDesc.visibility = View.VISIBLE
-            btcName.visibility = View.VISIBLE
-            aboutChart.visibility = View.VISIBLE
-            btcSymbol.visibility = View.VISIBLE
+            binding.apply {
+                lineChart.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
+                btcDesc.visibility = View.VISIBLE
+                btcName.visibility = View.VISIBLE
+                btcSymbol.visibility = View.VISIBLE
+                btcPrice.visibility = View.VISIBLE
+                aboutChart.visibility = View.VISIBLE
+            }
         }
 
         viewModel.observeBitcoinLiveData(this) { bitcoin ->
-            bitcoinDesc.text = bitcoin?.description ?: "Bitcoin Name Not Available"
+            binding.btcDesc.text = bitcoin?.description ?: "Bitcoin Name Not Available"
         }
 
 // Observe bitcoinInfoLiveData to get the BitcoinInfo data
         viewModel.observeBitcoinInfo(this) { bitcoinInfo ->
-            btcSymbol.text = "(${bitcoinInfo?.symbol})"
-            btcPrice.text = "$${bitcoinInfo?.last_trade_price}"
-            btcPrice.visibility = View.VISIBLE
+            binding.apply {
+                btcSymbol.text = "(${bitcoinInfo?.symbol})"
+                btcPrice.text = "$${bitcoinInfo?.last_trade_price}"
+                btcPrice.visibility = View.VISIBLE
+            }
         }
-
     }
 
     private fun displayLineChart(prices: ArrayList<Entry>) {
@@ -130,72 +125,73 @@ class Home : AppCompatActivity() {
         val lineData = LineData(lineDataSet)
 
         // Assign the LineData to the LineChart
-        lineChart.data = lineData
-        lineChart.description.text = "Bitcoin ChartGraph" // Set the description text
-        lineChart.description.textColor = Color.BLACK // Set the description text color
-        lineChart.description.textSize = 10f // Set the description text size
+        binding.apply {
+            lineChart.data = lineData
+            lineChart.description.text = "Bitcoin ChartGraph" // Set the description text
+            lineChart.description.textColor = Color.BLACK // Set the description text color
+            lineChart.description.textSize = 10f // Set the description text size
 
-        // Customize the XAxis (bottom axis)
-        val xAxis = lineChart.xAxis
-        xAxis.position = XAxis.XAxisPosition.BOTTOM // Set the position of the XAxis
-        xAxis.setDrawGridLines(false) // Hide vertical grid lines
-        xAxis.textColor = Color.BLACK // Set axis label text color
-        xAxis.textSize = 12f // Set axis label text size
+            // Customize the XAxis (bottom axis)
+            val xAxis = lineChart.xAxis
+            xAxis.position = XAxis.XAxisPosition.BOTTOM // Set the position of the XAxis
+            xAxis.setDrawGridLines(false) // Hide vertical grid lines
+            xAxis.textColor = Color.BLACK // Set axis label text color
+            xAxis.textSize = 12f // Set axis label text size
 
-        // Animate the X-axis (horizontal) entry points with a duration of 1000 milliseconds
-        lineChart.animateX(1000)
+            // Animate the X-axis (horizontal) entry points with a duration of 1000 milliseconds
+            lineChart.animateX(1000)
 
-        // Format the XAxis value using a custom ValueFormatter
-        xAxis.valueFormatter = object : ValueFormatter() {
+            // Format the XAxis value using a custom ValueFormatter
+            xAxis.valueFormatter = object : ValueFormatter() {
 
-            override fun getFormattedValue(value: Float): String {
-                val index = value.toInt()
-                return if (index >= 0 && index < (viewModel.bitcoinDataPrices.value?.size ?: 0)) {
-                    val timestamp = viewModel.bitcoinDataPrices.value?.get(index)?.x ?: 0
-                    formatDate(timestamp)
-                } else {
-                    ""
+                override fun getFormattedValue(value: Float): String {
+                    val index = value.toInt()
+                    return if (index >= 0 && index < (viewModel.bitcoinDataPrices.value?.size ?: 0)) {
+                        val timestamp = viewModel.bitcoinDataPrices.value?.get(index)?.x ?: 0
+                        formatDate(timestamp)
+                    } else {
+                        ""
+                    }
                 }
             }
+
+            // Customize the YAxis (left axis)
+            val yAxisLeft = lineChart.axisLeft
+            yAxisLeft.setDrawGridLines(true) // Hide horizontal grid lines
+            yAxisLeft.textColor = Color.BLACK // Set axis label text color
+            yAxisLeft.textSize = 12f // Set axis label text size
+
+            // Customize the YAxis (right axis)
+            lineChart.axisRight.isEnabled = false // Disable the right axis
+
+            // Customize the chart legend
+            val legend = lineChart.legend
+            legend.textColor = Color.BLACK // Set legend text color
+            legend.textSize = 14f // Set legend text size
+            legend.direction = Legend.LegendDirection.LEFT_TO_RIGHT // Set legend position
+
+            // Add this after setting up your lineDataSet
+            lineDataSet.setDrawIcons(false) // Hide data set icons
+            lineDataSet.setDrawValues(false) // Hide data set values
+
+            // Enable and customize the interactive legend
+            legend.form = Legend.LegendForm.LINE // Use line instead of default square
+            legend.formSize = 12f
+            legend.textSize = 12f
+            legend.isWordWrapEnabled = true
+            legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+            legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+            legend.orientation = Legend.LegendOrientation.HORIZONTAL
+            legend.setDrawInside(false)
+            legend.yEntrySpace = 10f
+            legend.xEntrySpace = 10f
+
+            // Enable hiding/showing data sets on legend click
+            lineChart.isHighlightPerTapEnabled = true
+            lineChart.isHighlightPerDragEnabled = false // Disable highlighting by dragging
+
+            lineChart.invalidate() // Refresh the chart
         }
-
-        // Customize the YAxis (left axis)
-        val yAxisLeft = lineChart.axisLeft
-        yAxisLeft.setDrawGridLines(true) // Hide horizontal grid lines
-        yAxisLeft.textColor = Color.BLACK // Set axis label text color
-        yAxisLeft.textSize = 12f // Set axis label text size
-
-        // Customize the YAxis (right axis)
-        lineChart.axisRight.isEnabled = false // Disable the right axis
-
-        // Customize the chart legend
-        val legend = lineChart.legend
-        legend.textColor = Color.BLACK // Set legend text color
-        legend.textSize = 14f // Set legend text size
-        legend.direction = Legend.LegendDirection.LEFT_TO_RIGHT // Set legend position
-
-        // Add this after setting up your lineDataSet
-        lineDataSet.setDrawIcons(false) // Hide data set icons
-        lineDataSet.setDrawValues(false) // Hide data set values
-
-        // Enable and customize the interactive legend
-        legend.form = Legend.LegendForm.LINE // Use line instead of default square
-        legend.formSize = 12f
-        legend.textSize = 12f
-        legend.isWordWrapEnabled = true
-        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-        legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-        legend.orientation = Legend.LegendOrientation.HORIZONTAL
-        legend.setDrawInside(false)
-        legend.yEntrySpace = 10f
-        legend.xEntrySpace = 10f
-
-        // Enable hiding/showing data sets on legend click
-        lineChart.isHighlightPerTapEnabled = true
-        lineChart.isHighlightPerDragEnabled = false // Disable highlighting by dragging
-
-
-        lineChart.invalidate() // Refresh the chart
     }
 
     private fun formatDate(timestamp: Int): String {
@@ -222,14 +218,20 @@ class Home : AppCompatActivity() {
 
     private fun showRefreshedSnackbar() {
         val snackbar = Snackbar.make(
-            btcName, "Data refreshed.", Snackbar.LENGTH_SHORT
+            binding.btcName, "Data refreshed.", Snackbar.LENGTH_SHORT
         )
         snackbar.show()
     }
 
     private fun showNoInternetSnackbar() {
         val snackbar =
-            Snackbar.make(btcName, "No internet connection. Try again later", Snackbar.LENGTH_SHORT)
+            Snackbar.make(binding.btcName, "No internet connection. Try again later", Snackbar.LENGTH_SHORT)
         snackbar.show()
     }
+
+//    private fun startHomeActivity(name: String) {
+//
+//        val intent = Intent(this, NAME::class.java)
+//        startActivity(intent)
+//    }
 }
