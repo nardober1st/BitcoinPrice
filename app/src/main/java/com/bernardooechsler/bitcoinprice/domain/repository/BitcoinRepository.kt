@@ -10,4 +10,7 @@ interface BitcoinRepository {
     suspend fun getBitcoinInfo(): BitcoinInfo?
     suspend fun getBitcoinInfoFromNetwork(): BitcoinInfo?
 
+    suspend fun insertBitcoin(bitcoin: Bitcoin)
+    suspend fun insertBitcoinInfo(bitcoinInfo: BitcoinInfo)
+
 }

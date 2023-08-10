@@ -24,7 +24,7 @@ class BitcoinViewModel(
 
     // LiveData to hold the entire Bitcoin data
     private val bitcoinData = MutableLiveData<Bitcoin?>()
-    private val bitcoinLiveData: LiveData<Bitcoin?> get() = bitcoinData
+    val bitcoinLiveData: LiveData<Bitcoin?> get() = bitcoinData
 
     // LiveData to hold the DataPrice
     private val _bitcoinDataPrices = MutableLiveData<List<DataPrice>>()
@@ -32,7 +32,7 @@ class BitcoinViewModel(
 
     // New LiveData for BitcoinInfo data
     private val _bitcoinInfo = MutableLiveData<BitcoinInfo?>()
-    private val bitcoinInfoLiveData: LiveData<BitcoinInfo?> get() = _bitcoinInfo
+    val bitcoinInfoLiveData: LiveData<BitcoinInfo?> get() = _bitcoinInfo
 
     fun getBitcoin() {
         viewModelScope.launch {
