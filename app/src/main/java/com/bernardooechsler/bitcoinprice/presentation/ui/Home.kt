@@ -1,20 +1,16 @@
 package com.bernardooechsler.bitcoinprice.presentation.ui
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bernardooechsler.bitcoinprice.R
 import com.bernardooechsler.bitcoinprice.databinding.ActivityHomeBinding
 import com.bernardooechsler.bitcoinprice.presentation.BitcoinViewModel
-import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
