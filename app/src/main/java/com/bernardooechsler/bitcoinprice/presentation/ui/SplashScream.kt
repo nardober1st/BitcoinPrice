@@ -1,4 +1,4 @@
-package com.bernardooechsler.bitcoinprice.presentation
+package com.bernardooechsler.bitcoinprice.presentation.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -16,7 +16,7 @@ class SplashScream : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
-        },3000)
+        },2000)
         supportActionBar?.hide()
     }
 }
