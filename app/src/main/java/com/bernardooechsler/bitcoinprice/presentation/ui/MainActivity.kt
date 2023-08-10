@@ -1,4 +1,4 @@
-package com.bernardooechsler.bitcoinprice.presentation
+package com.bernardooechsler.bitcoinprice.presentation.ui
 
 import android.content.Intent
 import android.graphics.Color
