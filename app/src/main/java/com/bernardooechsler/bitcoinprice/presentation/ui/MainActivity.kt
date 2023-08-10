@@ -69,7 +69,6 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun startHomeActivity(name: String) {
-
         val intent = Intent(this, Home::class.java)
         intent.putExtra(USER_NAME, name)
         startActivity(intent)
