@@ -1,6 +1,7 @@
 package com.bernardooechsler.bitcoinprice.presentation.ui
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
@@ -142,7 +143,9 @@ class Home : AppCompatActivity() {
 
                 override fun getFormattedValue(value: Float): String {
                     val index = value.toInt()
-                    return if (index >= 0 && index < (viewModel.bitcoinDataPrices.value?.size ?: 0)) {
+                    return if (index >= 0 && index < (viewModel.bitcoinDataPrices.value?.size
+                            ?: 0)
+                    ) {
                         val timestamp = viewModel.bitcoinDataPrices.value?.get(index)?.x ?: 0
                         formatDate(timestamp)
                     } else {
@@ -188,6 +191,16 @@ class Home : AppCompatActivity() {
 
             lineChart.invalidate() // Refresh the chart
         }
+
+
+        binding.tvCliqueAqui.setOnClickListener {
+
+
+            startConversionActivity()
+
+
+        }
+
     }
 
     private fun formatDate(timestamp: Int): String {
@@ -221,13 +234,17 @@ class Home : AppCompatActivity() {
 
     private fun showNoInternetSnackbar() {
         val snackbar =
-            Snackbar.make(binding.btcName, "No internet connection. Try again later", Snackbar.LENGTH_SHORT)
+            Snackbar.make(
+                binding.btcName,
+                "No internet connection. Try again later",
+                Snackbar.LENGTH_SHORT
+            )
         snackbar.show()
     }
 
-//    private fun startHomeActivity(name: String) {
-//
-//        val intent = Intent(this, NAME::class.java)
-//        startActivity(intent)
-//    }
+    private fun startConversionActivity() {
+
+        val intent = Intent(this, ConversationScreen::class.java)
+        startActivity(intent)
+    }
 }
