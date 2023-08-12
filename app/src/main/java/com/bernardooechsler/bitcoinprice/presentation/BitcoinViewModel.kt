@@ -1,12 +1,12 @@
 package com.bernardooechsler.bitcoinprice.presentation
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewModelScope
 import com.bernardooechsler.bitcoinprice.data.db.BitcoinDatabase
 import com.bernardooechsler.bitcoinprice.data.model.graph.Bitcoin
@@ -41,7 +41,7 @@ class BitcoinViewModel(
                 bitcoinData.value = bitcoin
                 _bitcoinDataPrices.value = bitcoin?.values ?: emptyList()
             } catch (e: Exception) {
-                Log.e("TAGY", "Exception: ${e.message}")
+                e.printStackTrace()
             }
         }
     }
@@ -52,7 +52,7 @@ class BitcoinViewModel(
                 val bitcoinInfo = repository.getBitcoinInfo()
                 _bitcoinInfo.value = bitcoinInfo
             } catch (e: Exception) {
-                Log.e("TAGY", "Exception: ${e.message}")
+                e.printStackTrace()
             }
         }
     }
@@ -69,7 +69,7 @@ class BitcoinViewModel(
                 val bitcoinInfo = repository.getBitcoinInfoFromNetwork()
                 _bitcoinInfo.value = bitcoinInfo
             } catch (e: Exception) {
-                Log.e("TAGY", "Exception: ${e.message}")
+                e.printStackTrace()
             }
         }
     }

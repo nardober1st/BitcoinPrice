@@ -32,8 +32,6 @@ class MainActivity : AppCompatActivity() {
             val name = edtname.text.toString()
             val password = edtpassword.text.toString()
 
-
-
             when {
 
                 name.isEmpty() -> {

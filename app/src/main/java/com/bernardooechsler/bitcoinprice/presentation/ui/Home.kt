@@ -32,15 +32,22 @@ class Home : AppCompatActivity() {
     }
     private lateinit var binding: ActivityHomeBinding
 
+    private lateinit var home: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val home = intent.getStringExtra(MainActivity.USER_NAME)
+        home = intent.getStringExtra(MainActivity.USER_NAME).toString()
         binding.tvName.text = "Ola, $home!"
 
         binding.apply {
+            tvBack.visibility = View.INVISIBLE
+            tvCliqueAqui.visibility = View.INVISIBLE
+            textView4.visibility = View.INVISIBLE
+            simpleLine.visibility = View.INVISIBLE
+            tvName.visibility = View.INVISIBLE
             lineChart.visibility = View.INVISIBLE
             progressBar.visibility = View.VISIBLE
             btcDesc.visibility = View.INVISIBLE
@@ -76,15 +83,22 @@ class Home : AppCompatActivity() {
 
             displayLineChart(prices)
 
-            binding.apply {
-                lineChart.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
-                btcDesc.visibility = View.VISIBLE
-                btcName.visibility = View.VISIBLE
-                btcSymbol.visibility = View.VISIBLE
-                btcPrice.visibility = View.VISIBLE
-                aboutChart.visibility = View.VISIBLE
-            }
+            binding.progressBar.postDelayed({
+                binding.apply {
+                    tvBack.visibility = View.VISIBLE
+                    tvCliqueAqui.visibility = View.VISIBLE
+                    textView4.visibility = View.VISIBLE
+                    simpleLine.visibility = View.VISIBLE
+                    tvName.visibility = View.VISIBLE
+                    lineChart.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                    btcDesc.visibility = View.VISIBLE
+                    btcName.visibility = View.VISIBLE
+                    btcSymbol.visibility = View.VISIBLE
+                    btcPrice.visibility = View.VISIBLE
+                    aboutChart.visibility = View.VISIBLE
+                }
+            }, 500)
         }
 
         viewModel.observeBitcoinLiveData(this) { bitcoin ->
@@ -101,6 +115,16 @@ class Home : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        // Fetch Bitcoin data again when the activity resumes
+        viewModel.getBitcoin()
+        // Fetch BitcoinInfo data again when the activity resumes
+        viewModel.getBitcoinInfo()
+    }
+
+
     private fun displayLineChart(prices: ArrayList<Entry>) {
 
         // Create a LineDataSet with the price entries and set properties
@@ -115,7 +139,7 @@ class Home : AppCompatActivity() {
         lineDataSet.setDrawFilled(true)
 
         // fill drawable only supported on api level 18 and above
-        val drawable = ContextCompat.getDrawable(this, R.drawable.gradient_fill)
+        val drawable = ContextCompat.getDrawable(this, R.drawable.gradient_fill_light)
         lineDataSet.fillDrawable = drawable
 
         // Create a LineData object with the LineDataSet
@@ -192,22 +216,15 @@ class Home : AppCompatActivity() {
             lineChart.invalidate() // Refresh the chart
         }
 
-
         binding.tvCliqueAqui.setOnClickListener {
 
-
             startConversionActivity()
-
-
         }
 
         binding.tvBack.setOnClickListener {
 
             startMainActivityActivity()
-
         }
-
-
     }
 
     private fun formatDate(timestamp: Int): String {
@@ -252,10 +269,14 @@ class Home : AppCompatActivity() {
     private fun startConversionActivity() {
 
         val intent = Intent(this, ConversationScreen::class.java)
+        intent.putExtra(MainActivity.USER_NAME, home)
         startActivity(intent)
-    }  private fun startMainActivityActivity() {
+    }
+
+    private fun startMainActivityActivity() {
 
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
+
 }

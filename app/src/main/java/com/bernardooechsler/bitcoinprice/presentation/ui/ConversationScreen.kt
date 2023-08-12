@@ -19,7 +19,6 @@ import java.io.IOException
 
 class ConversationScreen : AppCompatActivity() {
 
-
     // Constants:
     // TODO: Create the base URL
     private val BASE_URL = "http://api.coinlayer.com/api/live?access_key="
@@ -27,22 +26,18 @@ class ConversationScreen : AppCompatActivity() {
     // Member Variables:
     var mPriceTextView: TextView? = null
 
+    private var name: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conversation_screen)
 
-
+        name = intent.getStringExtra(MainActivity.USER_NAME)
 
         val voltar = findViewById<TextView>(R.id.tv_voltar)
         voltar.setOnClickListener {
-
             startHomeActivity()
-
         }
-
-
-
 
         mPriceTextView = findViewById<View>(R.id.priceLabel) as TextView
         val spinner = findViewById<View>(R.id.currency_spinner) as Spinner
@@ -73,18 +68,11 @@ class ConversationScreen : AppCompatActivity() {
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
-
-
-
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
-
-
-
     }
-
 
     // TODO: complete the letsDoSomeNetworking() method
     @Throws(IOException::class, JSONException::class)
@@ -114,10 +102,10 @@ class ConversationScreen : AppCompatActivity() {
         }]
     }
 
-
     private fun startHomeActivity() {
 
         val intent = Intent(this,Home::class.java)
+        intent.putExtra(MainActivity.USER_NAME, name)
         startActivity(intent)
     }
 }
