@@ -1,6 +1,7 @@
 package com.bernardooechsler.bitcoinprice.presentation
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,7 +17,9 @@ import com.bernardooechsler.bitcoinprice.data.remote.graph.BitcoinModule
 import com.bernardooechsler.bitcoinprice.data.remote.price.BitcoinInfoModule
 import com.bernardooechsler.bitcoinprice.data.repository.BitcoinRepositoryImpl
 import com.bernardooechsler.bitcoinprice.domain.repository.BitcoinRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class BitcoinViewModel(
     private val repository: BitcoinRepository
@@ -24,7 +27,7 @@ class BitcoinViewModel(
 
     // LiveData to hold the entire Bitcoin data
     private val bitcoinData = MutableLiveData<Bitcoin?>()
-    val bitcoinLiveData: LiveData<Bitcoin?> get() = bitcoinData
+    private val bitcoinLiveData: LiveData<Bitcoin?> get() = bitcoinData
 
     // LiveData to hold the DataPrice
     private val _bitcoinDataPrices = MutableLiveData<List<DataPrice>>()
@@ -32,14 +35,16 @@ class BitcoinViewModel(
 
     // New LiveData for BitcoinInfo data
     private val _bitcoinInfo = MutableLiveData<BitcoinInfo?>()
-    val bitcoinInfoLiveData: LiveData<BitcoinInfo?> get() = _bitcoinInfo
+    private val bitcoinInfoLiveData: LiveData<BitcoinInfo?> get() = _bitcoinInfo
 
     fun getBitcoin() {
         viewModelScope.launch {
             try {
                 val bitcoin = repository.getBitcoinData()
-                bitcoinData.value = bitcoin
-                _bitcoinDataPrices.value = bitcoin?.values ?: emptyList()
+                bitcoinData.postValue(bitcoin)
+                Log.e("TAGY", bitcoinData.value.toString())
+                _bitcoinDataPrices.postValue(bitcoin?.values)
+                Log.e("TAGY", _bitcoinDataPrices.value.toString())
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -72,6 +77,14 @@ class BitcoinViewModel(
                 e.printStackTrace()
             }
         }
+    }
+
+    suspend fun getTodayDataPrice(): DataPrice? {
+        return repository.getTodayDataPrice()
+    }
+
+    suspend fun getYesterdayDataPrice(): DataPrice? {
+        return repository.getYesterdayDataPrice()
     }
 
     fun observeBitcoinLiveData(owner: LifecycleOwner, observer: Observer<Bitcoin?>) {

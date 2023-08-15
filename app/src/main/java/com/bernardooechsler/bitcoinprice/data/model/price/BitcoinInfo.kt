@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "bitcoin_info_table")
 data class BitcoinInfo(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Long = 0,
     val last_trade_price: Double,
     val price_24h: Double,

@@ -6,8 +6,10 @@ import android.graphics.Color
 import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewModelScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bernardooechsler.bitcoinprice.R
 import com.bernardooechsler.bitcoinprice.databinding.ActivityHomeBinding
@@ -19,6 +21,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Date
@@ -103,10 +106,27 @@ class Home : AppCompatActivity() {
 
         viewModel.observeBitcoinLiveData(this) { bitcoin ->
             binding.btcDesc.text = bitcoin?.description ?: "Bitcoin Name Not Available"
+//            binding.btcPrice.text = bitcoin?.values?.lastOrNull()?.y.toString() -> this way we get the last bitcoin price from our dataPrice table (today's price)
+
+            viewModel.viewModelScope.launch {
+                val todayDataPrice = viewModel.getTodayDataPrice()
+                val yesterdayDataPrice = viewModel.getYesterdayDataPrice()
+
+                if (bitcoin != null && todayDataPrice != null && yesterdayDataPrice != null) {
+                    val currentPrice = bitcoin.values.lastOrNull()?.y ?: 0.0
+                    val yesterdayPrice = yesterdayDataPrice.y
+
+                    Log.d("TAGY", "Current Price: $currentPrice")
+                    Log.d("TAGY", "Yesterday Price: $yesterdayPrice")
+
+                    updatePriceChangePercentage(currentPrice, yesterdayPrice)
+                }
+            }
+
         }
 
 // Observe bitcoinInfoLiveData to get the BitcoinInfo data
-        viewModel.observeBitcoinInfo(this) { bitcoinInfo ->
+        viewModel.observeBitcoinInfo(this) { bitcoinInfo -> // this way we fetch bitcoin price from different endpoint and is refresh a few times during the day
             binding.apply {
                 btcSymbol.text = "(${bitcoinInfo?.symbol})"
                 btcPrice.text = "$${bitcoinInfo?.last_trade_price}"
@@ -124,12 +144,11 @@ class Home : AppCompatActivity() {
         viewModel.getBitcoinInfo()
     }
 
-
     private fun displayLineChart(prices: ArrayList<Entry>) {
 
         // Create a LineDataSet with the price entries and set properties
         val lineDataSet = LineDataSet(prices, "Bitcoin Price")
-        lineDataSet.color = ContextCompat.getColor(this, R.color.green) // Set the color of the line
+        lineDataSet.color = ContextCompat.getColor(this, R.color.black) // Set the color of the line
         lineDataSet.setDrawCircles(false)
         lineDataSet.lineWidth = 2f // Set the line width
         lineDataSet.valueTextColor = Color.BLACK // Set the color of value text
@@ -279,4 +298,21 @@ class Home : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private fun updatePriceChangePercentage(currentPrice: Double, yesterdayPrice: Double) {
+        val priceChangePercentage = ((currentPrice - yesterdayPrice) / yesterdayPrice) * 100
+        val priceChangeFormatted = String.format("%.2f%%", priceChangePercentage)
+
+//        val priceChangeTextView = findViewById<TextView>(R.id.tvPriceChange)
+//        val arrowImageView = findViewById<ImageView>(R.id.ivArrow)
+
+        binding.tvPercentage.text = priceChangeFormatted
+
+        if (priceChangePercentage > 0) {
+            binding.ivArrow.setImageResource(R.drawable.ic_up_arrow)
+        } else if (priceChangePercentage < 0) {
+            binding.ivArrow.setImageResource(R.drawable.ic_down_arrow)
+        } else {
+            binding.ivArrow.setImageDrawable(null)
+        }
+    }
 }

@@ -5,6 +5,7 @@ import com.bernardooechsler.bitcoinprice.data.local.graph.BitcoinDao
 import com.bernardooechsler.bitcoinprice.data.local.graph.DataPriceDao
 import com.bernardooechsler.bitcoinprice.data.local.price.BitcoinInfoDao
 import com.bernardooechsler.bitcoinprice.data.model.graph.Bitcoin
+import com.bernardooechsler.bitcoinprice.data.model.graph.DataPrice
 import com.bernardooechsler.bitcoinprice.data.model.price.BitcoinInfo
 import com.bernardooechsler.bitcoinprice.data.remote.graph.BitcoinService
 import com.bernardooechsler.bitcoinprice.data.remote.price.BitcoinInfoService
@@ -28,8 +29,13 @@ class BitcoinRepositoryImpl(
                 val response = bitcoinService.getBitcoin()
                 if (response.isSuccessful) {
                     val bitcoin = response.body()
-                    bitcoin?.let {
-                        insertBitcoin(bitcoin)
+                    if (bitcoin != null) {
+                        bitcoinDao.insertBitcoin(bitcoin)
+                        dataPriceDao.insertDataPrice(bitcoin.values)
+//                        bitcoin.values.forEach {
+//
+//
+//                        }
                     }
                     return bitcoin
                 } else {
@@ -51,9 +57,9 @@ class BitcoinRepositoryImpl(
                 val bitcoin = response.body()
                 if (bitcoin != null) {
                     bitcoinDao.insertBitcoin(bitcoin)
-                    bitcoin.values.forEach { dataPrice ->
-                        dataPriceDao.insertDataPrice(dataPrice)
-                    }
+//                    bitcoin.values.forEach { dataPrice ->
+                        dataPriceDao.insertDataPrice(bitcoin.values)
+//                    }
                 }
                 return bitcoin
             } else {
@@ -125,11 +131,19 @@ class BitcoinRepositoryImpl(
     override suspend fun insertBitcoin(bitcoin: Bitcoin) {
         bitcoinDao.insertBitcoin(bitcoin)
         bitcoin.values.forEach { dataPrices ->
-            dataPriceDao.insertDataPrice(dataPrices)
+            dataPriceDao.insertDataPrice(bitcoin.values)
         }
     }
 
     override suspend fun insertBitcoinInfo(bitcoinInfo: BitcoinInfo) {
         bitcoinInfoDao.insertBitcoinInfo(bitcoinInfo)
+    }
+
+    override suspend fun getTodayDataPrice(): DataPrice? {
+        return dataPriceDao.getTodayDataPrice()
+    }
+
+    override suspend fun getYesterdayDataPrice(): DataPrice? {
+        return dataPriceDao.getYesterdayDataPrice()
     }
 }
