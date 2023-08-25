@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="@color/md_theme_light_primary"
     android:gravity="center"
-    tools:context=".SplashScream">
+    tools:context=".presentation.ui.SplashScream">
 
     <ImageView
         android:layout_width="match_parent"
