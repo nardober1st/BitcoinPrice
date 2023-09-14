@@ -2,6 +2,9 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id("com.google.gms.google-services")
+
+
 }
 
 android {
@@ -101,4 +104,11 @@ dependencies {
 
     //dependencio or conversionScreem
     implementation("com.loopj.android:android-async-http:1.4.9")
+
+
+
+    //dependencie Login Autetication
+    implementation(platform("com.google.firebase:firebase-bom:32.2.3"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx")
 }
