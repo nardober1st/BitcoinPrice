@@ -28,7 +28,7 @@
             android:background="@drawable/rounded_border"
             android:drawableStart="@drawable/baseline_login_24"
             android:gravity="center"
-            android:hint="Nome"
+            android:hint="E-mail"
             android:inputType="text"
             android:maxLines="1"
             android:padding="15dp"
@@ -49,7 +49,16 @@
             android:maxLines="1"
             android:padding="15dp"
             android:textStyle="bold" />
-
+        <TextView
+            android:id="@+id/tv_esqueci"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Esqueceu a senha?"
+            android:textStyle="bold"
+            android:textAlignment="textEnd"
+            android:layout_marginEnd="33dp"
+            android:textSize="20sp"
+            android:layout_marginTop="2dp"/>
         <Button
             android:id="@+id/buttom_login"
             android:layout_width="match_parent"
@@ -62,6 +71,17 @@
             android:text="LOGIN"
             android:textStyle="bold"
             />
+
+        <Button
+            android:id="@+id/buttom_singUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="100dp"
+            android:layout_marginEnd="100dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/md_theme_light_onSecondaryContainer"
+            android:text="CADASTRE-SE"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

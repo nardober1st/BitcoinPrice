@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "888285977810",
+    "project_id": "bitflow-e308c",
+    "storage_bucket": "bitflow-e308c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:888285977810:android:3fc2fdc2df4459285a210b",
+        "android_client_info": {
+          "package_name": "com.bernardooechsler.bitcoinprice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "888285977810-m9ijdae3brdqo6dq64pb0v0kiuoglueq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2rUs9v50xAbeewuzfl8QbrRXv1hQojTs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "888285977810-m9ijdae3brdqo6dq64pb0v0kiuoglueq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

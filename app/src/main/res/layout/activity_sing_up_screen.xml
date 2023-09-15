@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_theme_light_primary"
+    tools:context=".presentation.ui.SingUpScreen">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="124dp"
+        android:text="Cadastre-se"
+        android:textAlignment="center"
+        android:textColor="@color/md_theme_light_scrim"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <EditText
+        android:id="@+id/edt_email_registration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:background="@drawable/rounded_border"
+        android:drawableStart="@drawable/baseline_login_24"
+        android:layout_marginEnd="40dp"
+        android:layout_marginStart="40dp"
+        android:gravity="center"
+        android:hint="E-mail"
+        android:inputType="text"
+        android:maxLines="1"
+        android:padding="15dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <EditText
+        android:id="@+id/edt_password_registration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginStart="40dp"
+        android:background="@drawable/rounded_border"
+        android:drawableStart="@drawable/baseline_password_24"
+        android:gravity="center"
+        android:hint="Senha"
+        android:inputType="textPassword"
+        android:maxLines="1"
+        android:padding="15dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/edt_email_registration"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <Button
+        android:id="@+id/buttom_registration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="100dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/md_theme_light_onSecondaryContainer"
+        android:text="CADASTRAR"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/edt_password_registration"
+        tools:layout_editor_absoluteX="110dp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
